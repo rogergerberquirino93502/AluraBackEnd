@@ -18,9 +18,16 @@ public class RegistroDeProducto {
         Producto producto = productoDAO.consultaPorId(1L);
         System.out.println(producto.getNombre());
 
-        List<Producto> productos = productoDAO.ConsultaTodos();
-        productos.forEach(p -> System.out.println(p.getNombre()));
+        BigDecimal precio = productoDAO.consultaPrecioPorNombre("Xiaomi Redmi Note 9");
+        System.out.println(precio);
+       /* List<Producto> productos = productoDAO.consultaPorNombreDeCategoria("Celulares");
+        productos.forEach(p -> System.out.println(p.getDescripcion()));*/
     }
+
+
+
+
+
     private static void registrarProducto() {
         Categoria celulares = new Categoria("Celulares");
         Producto celular = new Producto("Xiaomi Redmi Note 9", "Celular Xiaomi Redmi Note 9", new BigDecimal("200000"),  celulares);
@@ -36,10 +43,9 @@ public class RegistroDeProducto {
 
         em.getTransaction().commit();
         em.close();
-
-
-
-        /*   Categoria celulares = new Categoria("Celulares");
+    }
+}
+       /*   Categoria celulares = new Categoria("Celulares");
         Producto celular = new Producto("Xiaomi Redmi Note 9", "Celular Xiaomi Redmi Note 9", new BigDecimal("200000"),  celulares);
 
         EntityManager em = JPAUtils.getEntityManager();
@@ -68,5 +74,3 @@ public class RegistroDeProducto {
         productoDAO.Guardar(celular);
         em.getTransaction().commit();
         em.close();*/
-    }
-}

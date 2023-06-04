@@ -18,7 +18,9 @@ public class Producto {
     private LocalDate fechaDeRegistro = LocalDate.now();
     @ManyToOne
     private Categoria categoria;
-
+    public Producto() {
+        // Constructor sin argumentos
+    }
     public Producto(String nombre, String descripcion, BigDecimal precio, Categoria categoria) {
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -57,6 +59,8 @@ public class Producto {
     public void setPrecio(BigDecimal precio) {
         this.precio = precio;
     }
+
+
 
 
 }
