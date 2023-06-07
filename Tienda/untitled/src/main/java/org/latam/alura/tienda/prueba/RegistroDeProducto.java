@@ -1,10 +1,12 @@
 package org.latam.alura.tienda.prueba;
 
 import org.latam.alura.tienda.dao.CategoriaDAO;
+import org.latam.alura.tienda.dao.ClienteDAO;
+import org.latam.alura.tienda.dao.PedidoDAO;
 import org.latam.alura.tienda.dao.ProductoDAO;
-import org.latam.alura.tienda.modelo.Categoria;
-import org.latam.alura.tienda.modelo.Producto;
+import org.latam.alura.tienda.modelo.*;
 import org.latam.alura.tienda.utils.JPAUtils;
+import org.latam.alura.tienda.vo.RelatorioDeVenta;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
@@ -14,19 +16,32 @@ public class RegistroDeProducto {
     public static void main(String[] args) {
         registrarProducto();
         EntityManager em = JPAUtils.getEntityManager();
-        ProductoDAO productoDAO = new ProductoDAO(em);
+        ProductoDAO productoDAO = new ProductoDAO(JPAUtils.getEntityManager());
         Producto producto = productoDAO.consultaPorId(1L);
-        System.out.println(producto.getNombre());
 
-        BigDecimal precio = productoDAO.consultaPrecioPorNombre("Xiaomi Redmi Note 9");
-        System.out.println(precio);
-       /* List<Producto> productos = productoDAO.consultaPorNombreDeCategoria("Celulares");
-        productos.forEach(p -> System.out.println(p.getDescripcion()));*/
+        ClienteDAO clienteDAO= new ClienteDAO(em);
+        PedidoDAO pedidoDao = new PedidoDAO(em);
+
+        Cliente cliente = new Cliente("Juan", "123456789");
+        Pedido pedido = new Pedido(cliente);
+        pedido.agregarItem(new ItemsPedido(5,producto, pedido));
+        em.getTransaction().begin();
+
+        clienteDAO.Guardar(cliente);
+        pedidoDao.Guardar(pedido);
+
+        em.getTransaction().commit();
+
+        BigDecimal valorTotal = pedidoDao.valorTotalVendida();
+        System.out.println("El valor total vendido es: " + valorTotal);
+
+        List<RelatorioDeVenta> relatorio = pedidoDao.relatorioDeVentasVO();
+
+        relatorio.forEach(System.out::println);
+
+
+
     }
-
-
-
-
 
     private static void registrarProducto() {
         Categoria celulares = new Categoria("Celulares");
@@ -45,32 +60,3 @@ public class RegistroDeProducto {
         em.close();
     }
 }
-       /*   Categoria celulares = new Categoria("Celulares");
-        Producto celular = new Producto("Xiaomi Redmi Note 9", "Celular Xiaomi Redmi Note 9", new BigDecimal("200000"),  celulares);
-
-        EntityManager em = JPAUtils.getEntityManager();
-
-        em.getTransaction().begin();
-        em.persist(celulares);
-        celulares.setNombre("LIBROS");
-
-        em.flush();
-        em.clear();
-
-        celulares = em.merge(celulares);
-        celulares.setNombre("SOFTWARE");
-
-        em.flush();
-        em.clear();
-
-        celulares = em.merge(celulares);
-        em.remove(celulares);
-        em.flush();
-
-        CategoriaDAO categoriaDAO = new CategoriaDAO(em);
-        ProductoDAO productoDAO = new ProductoDAO(em);
-        em.getTransaction().begin();
-        categoriaDAO.Guardar(celulares);
-        productoDAO.Guardar(celular);
-        em.getTransaction().commit();
-        em.close();*/

@@ -6,6 +6,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name="productos")
+@NamedQuery(name = "Producto.consultadePrecio", query = "SELECT p.precio FROM Producto AS p WHERE p.nombre = :nombre")
 public class Producto {
 
     @Id
@@ -16,7 +17,7 @@ public class Producto {
     private BigDecimal precio;
 
     private LocalDate fechaDeRegistro = LocalDate.now();
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Categoria categoria;
     public Producto() {
         // Constructor sin argumentos
